@@ -3,15 +3,15 @@ package main
 import("net/http"
        "github.com/globalsign/mgo/bson"
 	   "log"
-	"fmt")
+	"fmt"
+	"gopkg.in/go-playground/validator.v9")
 
-type User struct {
-
-	Name      string 
-	Username      string 
-	Email 		string 
-	Password string
-}
+	type User struct {
+		Name     string `validate:"required"`
+		Username string `validate:"required"`
+		Email    string `validate:"required,email"`
+		Password string `validate:"required,min=8"`
+	}
 
 type UserUpdate struct {
 
@@ -45,7 +45,7 @@ func RegisterUser(response http.ResponseWriter, request *http.Request) {
 	}
 
 	// decodificando o JSON no estrutura de usuário
-	/*err := DecodeJson(body, &user)
+	err := DecodeJson(body, &user)
 
 	// validando erro de decodificação
 	if err != nil {
@@ -59,7 +59,7 @@ func RegisterUser(response http.ResponseWriter, request *http.Request) {
 	// ---------------------------
 
 	// validação da informação 
-	/*err = validate.Struct(user)
+	err = validate.Struct(user)
 
 	// validando erro de validação
 	if err != nil {
